@@ -16,26 +16,23 @@ pub fn log(level: LogLevel, message: &str) -> String {
     log_fn(message)
 }
 pub fn info(message: &str) -> String {
-    return "[INFO]: ".to_owned() + message
+    format!("[INFO]: {}", message)
 }
 pub fn warn(message: &str) -> String {
-    return "[WARNING]: ".to_owned() + message
+    format!("[WARNING]: {} ", message)
 }
 pub fn error(message: &str) -> String {
-    return "[ERROR]: ".to_owned() + message
+    format!("[ERROR]: {} ", message)
 }
 pub fn debug(message: &str) -> String {
-    return "[DEBUG]: ".to_owned() + message
+    format!("[DEBUG]: {} ", message)
 }
-// tried to return a function, compiler requires me to have an else
-pub fn get_logger(level: LogLevel) -> fn(&str) -> String {
-    if level == LogLevel::Info {
-        return info
-    } else if level == LogLevel::Warning {
-        return warn
-    } else if level == LogLevel::Error {
-        return error
-    } else {
-        return debug
+// using match, way cleaner, compiler is smart to not ask for a 'default' here
+pub fn get_logger(level: LogLevel) -> (fn(&str) -> String) {
+    match level {
+        LogLevel::Info => info,
+        LogLevel::Warning => warn,
+        LogLevel::Error => error,
+        LogLevel::Debug => debug
     }
 }
